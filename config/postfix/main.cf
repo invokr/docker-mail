@@ -1,0 +1,65 @@
+# Postfix config for invokr/securemail on docker hub
+
+# Configure for which host we accept mail
+myhostname = ${env["POSTFIX_HOSTNAME"]}
+mydomain = ${env["POSTFIX_DOMAIN"]}
+myorigin = $mydomain
+mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTINATION"]}
+mynetworks_style = host
+
+# Set output folders
+#home_mailbox = Mailbox
+#home_mailbox = Maildir/
+#mail_spool_directory = /var/mail
+#mailbox_transport = cyrus
+
+soft_bounce = no
+unknown_local_recipient_reject_code = 550
+header_checks = regexp:/etc/postfix/header_checks
+smtpd_helo_required = yes
+smtpd_recipient_restrictions =
+    reject_invalid_hostname,
+    reject_non_fqdn_sender,
+    reject_non_fqdn_recipient,
+    reject_unknown_sender_domain,
+    reject_unknown_recipient_domain,
+    permit_mynetworks,
+    reject_non_fqdn_hostname,
+    permit_sasl_authenticated,
+    reject_unauth_destination,
+    reject_rbl_client list.dsbl.org,
+    reject_rbl_client sbl.spamhaus.org,
+    reject_rbl_client cbl.abuseat.org,
+    reject_rbl_client dul.dnsbl.sorbs.net
+smtpd_data_restrictions = reject_unauth_pipelining
+
+# Directories used by Postfix
+queue_directory   = /var/spool/postfix
+command_directory = /usr/sbin
+daemon_directory  = /usr/libexec/postfix
+data_directory    = /var/lib/postfix
+
+sendmail_path = /usr/sbin/sendmail.postfix
+newaliases_path = /usr/bin/newaliases.postfix
+mailq_path = /usr/bin/mailq.postfix
+
+smtpd_banner = $myhostname ESMTP
+setgid_group = postdrop
+mail_owner = postfix
+default_privs = nobody
+
+# Listen on all interfaces for incoming mail
+inet_interfaces = all
+inet_protocols = all
+
+# This allows a single mail per process per second
+in_flow_delay = 1s
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+# Max mailsize 20MB
+message_size_limit = 20971520
+
+# Disable user lookup
+disable_vrfy_command = yes
