@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# userdel - for deleting virtual dovecot users
+#
+
+basedir="/vmail"
+
+if [ ! $# = 1 ]
+then
+ echo -e "Usage: $0 username@domain"
+ exit 1
+else
+ user=`echo "$1" | cut -f1 -d "@"`
+ domain=`echo "$1" | cut -s -f2 -d "@"`
+ if [ -x $domain ]
+  then
+   echo -e "No domain given\nUsage: $0 username@domain: "
+   exit 2
+ fi
+fi
+read -n 1 -p "Delete user $user@$domain from dovecot? [Y/N]? "
+echo
+case $REPLY in
+y | Y)
+ new_users=`grep -v $user@$domain /secure/dovecot/users`
+ new_passwd=`grep -v $user@$domain /secure/dovecot/passwd`
+ new_vmaps=`grep -v $user@$domain /secure/postfix/vmaps`
+ new_uids=`grep -v $user@$domain /secure/postfix/vuids`
+ new_gids=`grep -v $user@$domain /secure/postfix/vgids`
+
+ echo "Deleting $user@$domain from /secure/dovecot/users"
+ echo "$new_users" > /secure/dovecot/users
+ echo "Deleting $user@$domain from /secure/dovecot/passwd"
+ echo "$new_passwd" > /secure/dovecot/passwd
+ echo "Deleting $user@$domain from /secure/postfix/vmaps"
+ echo "$new_vmaps" > /secure/postfix/vmaps
+ echo "Deleting $user@$domain from /secure/postfix/vuids"
+ echo "$new_vuids" > /secure/postfix/vuids
+ echo "Deleting $user@$domain from /secure/postfix/vgids"
+ echo "$new_vgids" > /secure/postfix/vgids
+
+ postmap /secure/postfix/vmaps
+ postmap /secure/postfix/vuids
+ postmap /secure/postfix/vgids
+ postfix reload
+
+ read -n1 -p "Delete all files in $basedir/$domain/$user? [Y/N]? " DELETE
+ echo
+ case $DELETE in
+  y | Y)
+   echo "Deleting files in $basedir/$domain/$user"
+   rm -fr $basedir/$domain/$user
+  ;;
+  * )
+   echo "Not deleting files in $basedir/$domain/$user"
+  ;;
+ esac
+;;
+* )
+ echo "Aborting..."
+;;
+esac
