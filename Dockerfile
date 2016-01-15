@@ -28,10 +28,7 @@ RUN mkdir -p /secure/postfix && touch /secure/postfix/vmaps /secure/postfix/vhos
 ADD config/supervisor/supervisord.conf /etc/supervisord.conf
 
 # Configure rsyslogd
-RUN sed -i 's/^\$ModLoad imjournal/#\$ModLoad imjournal/' /etc/rsyslog.conf \
- && sed -i 's/^\$OmitLocalLogging on/\$OmitLocalLogging off/' /etc/rsyslog.conf \
- && sed -i 's/^\$IMJournalStateFile imjournal.state/#\$IMJournalStateFile imjournal.state/' /etc/rsyslog.conf \
- && sed -i 's/^\$SystemLogSocketName/#\$SystemLogSocketName/' /etc/rsyslog.d/listen.conf
+ADD config/rsyslog/file.conf /etc/rsyslog.conf
 
 # Configure opendmarc
 ADD config/opendmarc/opendmarc.conf /etc/opendmarc.conf
