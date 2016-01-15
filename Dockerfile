@@ -17,7 +17,8 @@ ADD scripts /opt/bin
 ADD config /opt/config
 
 # Add group and user for virtual mail
-RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
+RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail && chmod 755 /vmail \
+ && usermod -G vmail postfix && usermod -G vmail dovecot
 
 # Add secure directory
 RUN mkdir -p /secure/postfix && touch /secure/postfix/vmaps /secure/postfix/vhosts /secure/postfix/vuids /secure/postfix/vgids \
