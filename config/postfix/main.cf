@@ -7,11 +7,15 @@ myorigin = $mydomain
 mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTINATION"]}
 mynetworks_style = host
 
+virtual_mailbox_domains = /etc/postfix/vhosts
+virtual_mailbox_base = /vmail
+virtual_mailbox_maps = hash:/etc/postfix/vmaps
+virtual_minimum_uid = 1000
+virtual_uid_maps = static:10000
+virtual_gid_maps = static:10000
+
 # Set output folders
-#home_mailbox = Mailbox
-#home_mailbox = Maildir/
-#mail_spool_directory = /var/mail
-#mailbox_transport = cyrus
+home_mailbox = Maildir/
 
 soft_bounce = no
 unknown_local_recipient_reject_code = 550
