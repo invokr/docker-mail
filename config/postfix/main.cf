@@ -8,12 +8,12 @@ mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTI
 mynetworks_style = host
 
 # Configure virtual mailboxes
-virtual_mailbox_domains = /secure/vhosts
+virtual_mailbox_domains = /secure/postfix/vhosts
 virtual_mailbox_base = /vmail
-virtual_mailbox_maps = hash:/secure/vmaps
+virtual_mailbox_maps = hash:/secure/postfix/vmaps
 virtual_minimum_uid = 1000
-virtual_uid_maps = static:10000
-virtual_gid_maps = static:10000
+virtual_uid_maps = hash:/secure/postfix/vuids
+virtual_gid_maps = hash:/secure/postfix/vgids 
 
 # Configure TLS when receiving mail
 smtpd_tls_cert_file=/secure/ssl/mail.crt
