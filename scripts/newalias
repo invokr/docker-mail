@@ -6,7 +6,7 @@ if [ ! $# = 2 ]; then
   exit 1
 else
     echo "Adding alias $2 for $1 to postfix"
-    echo $1 $2 >> /secure/postfix/valias
+    echo $2 $1 >> /secure/postfix/valias
     postmap /secure/postfix/valias
     postfix reload
 fi
