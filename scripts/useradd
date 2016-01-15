@@ -37,8 +37,8 @@ else
   # create domain directory
   if [ ! -x $basedir/$domain ]; then
     mkdir $basedir/$domain
-    chown $uid:$gid $basedir/$domain
-    chmod 700 $basedir/$domain
+    chown vmail:vmail $basedir/$domain
+    chmod 755 $basedir/$domain
   fi
 
   mkdir -p $basedir/$domain/$user
