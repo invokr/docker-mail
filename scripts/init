@@ -4,3 +4,9 @@
 /opt/bin/config-apply /opt/config/postfix/vmaps /etc/postfix/vmaps
 postmap /secure/vmaps
 /opt/bin/gentls
+
+supervisorctl start rsyslog
+supervisorctl start crond
+supervisorctl start opendmarc
+supervisorctl start postfix:master
+supervisorctl start dovecot
