@@ -15,11 +15,7 @@ ENV POSTFIX_VHOSTS "domain1.tld,domain2.tld"
 ENV POSTFIX_VMAPS "info@domain1.tld  domain1.tld/info/,info@domain2.tld  domain2.tld/info/"
 
 # Install scripts
-ADD scripts/dumb-init /sbin/dumb-init
-ADD scripts/postfix.sh /opt/postfix
-ADD scripts/config-apply.py /opt/config-apply
-ADD scripts/gentls.sh /opt/gentls
-ADD scripts/update-tld-names.sh /opt/update-tld-names
+ADD scripts/ /opt/bin/
 
 # Add group and user for virtual mail
 RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
@@ -35,7 +31,7 @@ RUN sed -i 's/^\$ModLoad imjournal/#\$ModLoad imjournal/' /etc/rsyslog.conf \
 
 # Configure opendmarc
 ADD config/opendmarc/opendmarc.conf /etc/opendmarc.conf
-RUN ln -s /opt/update-tld-names /etc/cron.weekly/ && /opt/update-tld-names
+RUN ln -s /opt/bin/update-tld-names /etc/cron.weekly/ && /opt/bin/update-tld-names
 
 # Configure postfix
 ADD config/postfix /etc/postfix/
@@ -43,11 +39,11 @@ ADD config/postfix /etc/postfix/
 # Configure dovecot
 ADD config/dovecot /etc/dovecot
 
-RUN /opt/config-apply /etc/postfix/main.cf \
- && /opt/config-apply /etc/postfix/vhosts \
- && /opt/config-apply /etc/postfix/vmaps \
+RUN /opt/bin/config-apply /etc/postfix/main.cf \
+ && /opt/bin/config-apply /etc/postfix/vhosts \
+ && /opt/bin/config-apply /etc/postfix/vmaps \
  && postmap /etc/postfix/vmaps \
- && /opt/gentls
+ && /opt/bin/gentls
 
 # Start our init system
-#CMD ['/sbin/dumb-init', '/usr/bin/supervisord -c /etc/supervisord.conf']
+#CMD ['/opt/bin/dumb-init', '/usr/bin/supervisord -c /etc/supervisord.conf']
