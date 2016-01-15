@@ -8,9 +8,9 @@ mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTI
 mynetworks_style = host
 
 # Configure virtual mailboxes
-virtual_mailbox_domains = /etc/postfix/vhosts
+virtual_mailbox_domains = /secure/vhosts
 virtual_mailbox_base = /vmail
-virtual_mailbox_maps = hash:/etc/postfix/vmaps
+virtual_mailbox_maps = hash:/secure/vmaps
 virtual_minimum_uid = 1000
 virtual_uid_maps = static:10000
 virtual_gid_maps = static:10000

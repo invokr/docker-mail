@@ -11,8 +11,6 @@ RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 
 # Environment variables
 ENV POSTFIX_HOSTNAME="mail.domain.tld" POSTFIX_DOMAIN="domain.tld" POSTFIX_DESTINATION=""
-ENV POSTFIX_VHOSTS "domain1.tld,domain2.tld"
-ENV POSTFIX_VMAPS "info@domain1.tld  domain1.tld/info/,info@domain2.tld  domain2.tld/info/"
 
 # Add scripts and config
 ADD scripts /opt/bin
@@ -22,7 +20,7 @@ ADD config /opt/config
 RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
 
 # Add secure directory
-RUN mkdir /secure
+RUN mkdir /secure && touch /secure/users /secure/passwd /secure/vmaps /secure/vhosts
 
 # Configure supervisord
 ADD config/supervisor/supervisord.conf /etc/supervisord.conf
