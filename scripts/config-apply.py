@@ -7,6 +7,9 @@ if (len(sys.argv) != 2):
     print("Usage: config-apply.py <FILENAME>")
     sys.exit()
 
-file = open(sys.argv[1], "r+")
-file.write(Template(file.read()).render(env=os.environ))
-file.close()
+tpl = ""
+with open(sys.argv[1]) as file:
+    tpl = file.read()
+
+with open(sys.argv[1], "w") as file:
+    file.write(Template(tpl).render(env=os.environ))
