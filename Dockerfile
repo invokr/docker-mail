@@ -40,6 +40,9 @@ RUN ln -s /opt/update-tld-names /etc/cron.weekly/ && /opt/update-tld-names
 # Configure postfix
 ADD config/postfix /etc/postfix/
 
+# Configure dovecot
+ADD config/dovecot /etc/dovecot
+
 RUN /opt/config-apply /etc/postfix/main.cf \
  && /opt/config-apply /etc/postfix/vhosts \
  && /opt/config-apply /etc/postfix/vmaps \
