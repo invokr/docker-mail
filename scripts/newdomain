@@ -1,0 +1,12 @@
+#!/bin/bash
+# Adds new domain to postfix
+
+if [ ! $# = 1 ]; then
+  echo "Usage: $0 domain.tld"
+  exit 1
+else
+
+    echo "Adding domain $1 to postfix"
+    echo $1 >> /secure/postfix/vhosts
+    postfix reload
+fi

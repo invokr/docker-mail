@@ -1,0 +1,12 @@
+#!/bin/bash
+# Adds alias for virtual user
+
+if [ ! $# = 2 ]; then
+  echo "Usage: $0 user@domain alias@domain"
+  exit 1
+else
+    echo "Adding alias $2 for $1 to postfix"
+    echo $1 $2 >> /secure/postfix/valias
+    postmap /secure/postfix/valias
+    postfix reload
+fi
