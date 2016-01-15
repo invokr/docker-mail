@@ -41,11 +41,5 @@ ADD config/postfix /etc/postfix/
 # Configure dovecot
 ADD config/dovecot /etc/dovecot
 
-RUN /opt/bin/config-apply /etc/postfix/main.cf \
- && /opt/bin/config-apply /etc/postfix/vhosts \
- && /opt/bin/config-apply /etc/postfix/vmaps \
- && postmap /etc/postfix/vmaps \
- && /opt/bin/gentls
-
 # Start our init system
 #CMD ['/opt/bin/dumb-init', '/usr/bin/supervisord -c /etc/supervisord.conf']

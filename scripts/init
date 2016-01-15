@@ -1,0 +1,6 @@
+#!/bin/bash
+/opt/bin/config-apply /opt/config/postfix/main.cf /etc/postfix/main.cf
+/opt/bin/config-apply /opt/config/postfix/vhosts /etc/postfix/vhosts
+/opt/bin/config-apply /opt/config/postfix/vmaps /etc/postfix/vmaps
+postmap /secure/vmaps
+/opt/bin/gentls

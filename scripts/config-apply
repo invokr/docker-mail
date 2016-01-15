@@ -3,13 +3,13 @@ import sys
 import os
 from mako.template import Template
 
-if (len(sys.argv) != 2):
-    print("Usage: config-apply.py <FILENAME>")
+if (len(sys.argv) != 3):
+    print("Usage: config-apply.py <INPUT> <OUTPUT>")
     sys.exit()
 
 tpl = ""
 with open(sys.argv[1]) as file:
     tpl = file.read()
 
-with open(sys.argv[1], "w") as file:
+with open(sys.argv[2], "w") as file:
     file.write(Template(tpl).render(env=os.environ))
