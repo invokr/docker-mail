@@ -7,6 +7,7 @@ myorigin = $mydomain
 mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTINATION"]}
 mynetworks_style = host
 
+# Configure virtual mailboxes
 virtual_mailbox_domains = /etc/postfix/vhosts
 virtual_mailbox_base = /vmail
 virtual_mailbox_maps = hash:/etc/postfix/vmaps
@@ -14,9 +15,28 @@ virtual_minimum_uid = 1000
 virtual_uid_maps = static:10000
 virtual_gid_maps = static:10000
 
+# Configure TLS
+smtpd_tls_cert_file=/etc/postfix/ssl/postfix.crt
+smtpd_tls_key_file=/etc/postfix/ssl/postfix.key
+smtpd_use_tls=yes
+smtpd_tls_auth_only=yes
+smtpd_tls_security_level=may
+smtpd_tls_mandatory_ciphers=high
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3
+smtpd_tls_loglevel=3
+
+smtp_tls_cert_file=/etc/postfix/ssl/postfix.crt
+smtp_tls_key_file=/etc/postfix/ssl/postfix.key
+smtp_use_tls=yes
+smtp_tls_security_level=may
+smtp_tls_mandatory_ciphers=high
+smtp_tls_mandatory_protocols = !SSLv2, !SSLv3
+smtp_tls_loglevel=3
+
 # Set output folders
 home_mailbox = Maildir/
 
+# Place some restrictions on the clients we accept
 soft_bounce = no
 unknown_local_recipient_reject_code = 550
 header_checks = regexp:/etc/postfix/header_checks
