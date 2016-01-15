@@ -42,5 +42,10 @@ ADD config/postfix /etc/postfix/
 # Configure dovecot
 ADD config/dovecot /etc/dovecot
 
+# Expose smtpd, submission and imaps
+EXPOSE 25
+EXPOSE 587
+EXPOSE 993
+
 # Start our init system
-#CMD ['/opt/bin/dumb-init', '/usr/bin/supervisord -c /etc/supervisord.conf']
+CMD ["/opt/bin/dumb-init", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
