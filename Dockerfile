@@ -22,8 +22,16 @@ ADD scripts/gentls.sh /opt/gentls
 # Add group and user for virtual mail
 RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
 
-# Configure the software
+# Configure supervisord
 ADD config/supervisor/supervisord.conf /etc/supervisord.conf
+
+# Configure rsyslogd
+RUN sed -i 's/^\$ModLoad imjournal/#\$ModLoad imjournal/' /etc/rsyslog.conf \
+ && sed -i 's/^\$OmitLocalLogging on/\$OmitLocalLogging off/' /etc/rsyslog.conf \
+ && sed -i 's/^\$IMJournalStateFile imjournal.state/#\$IMJournalStateFile imjournal.state/' /etc/rsyslog.conf \
+ && sed -i 's/^\$SystemLogSocketName/#\$SystemLogSocketName/' /etc/rsyslog.d/listen.conf
+
+# Configure postfix
 ADD config/postfix /etc/postfix/
 
 RUN /opt/config-apply /etc/postfix/main.cf \
