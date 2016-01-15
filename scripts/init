@@ -8,6 +8,7 @@ mkdir -p /secure/dovecot
 postmap /secure/postfix/vmaps
 postmap /secure/postfix/vuids
 postmap /secure/postfix/vgids
+newaliases
 
 supervisorctl start rsyslog
 supervisorctl start crond
