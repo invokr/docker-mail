@@ -20,7 +20,8 @@ ADD config /opt/config
 RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
 
 # Add secure directory
-RUN mkdir /secure && touch /secure/users /secure/passwd /secure/vmaps /secure/vhosts
+RUN mkdir -p /secure/postfix && touch /secure/postfix/vmaps /secure/postfix/vhosts /secure/postfix/vuids /secure/postfix/vgids \
+ && mkdir -p /secure/dovecot && touch /secure/dovecot/users /secure/dovecot/passwd
 
 # Configure supervisord
 ADD config/supervisor/supervisord.conf /etc/supervisord.conf
