@@ -2,9 +2,8 @@
 
 # Configure for which host we accept mail
 myhostname = ${env["POSTFIX_HOSTNAME"]}
-mydomain = ${env["POSTFIX_DOMAIN"]}
 myorigin = $mydomain
-mydestination = $myhostname, localhost.$mydomain, localhost ${env["POSTFIX_DESTINATION"]}
+mydestination = $myhostname, localhost.$mydomain, localhost
 mynetworks_style = host
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases

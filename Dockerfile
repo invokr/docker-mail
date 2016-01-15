@@ -10,7 +10,7 @@ RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 # RUN yum install -y telnet vim mailx
 
 # Environment variables
-ENV POSTFIX_HOSTNAME="mail.domain.tld" POSTFIX_DOMAIN="domain.tld" POSTFIX_DESTINATION=""
+ENV POSTFIX_HOSTNAME="mail.domain.tld"
 
 # Add scripts and config
 ADD scripts /opt/bin
