@@ -1,0 +1,67 @@
+#!/bin/bash
+# Adds a user to postfix and dovecot
+# Based on: https://help.ubuntu.com/community/PostfixVirtualMailBoxClamSmtpHowto
+
+# next available uid and gid
+uid=$(awk -F: '$3>=10000 && $3<20000{print $3+1}' /secure/dovecot/users | sort -n | tail -n1)
+gid=$(awk -F: '$4>=10000 && $4<20000{print $4+1}' /secure/dovecot/users | sort -n | tail -n1)
+
+# basedir
+basedir=/vmail
+
+# make sure we start with valid numers
+if [ -z $uid ]; then
+    uid=10001
+    gid=10001
+fi
+
+if [ ! $# = 1 ]; then
+  echo "Usage: $0 user@domain"
+  exit 1
+else
+  user=`echo "$1" | cut -f1 -d "@"`
+  domain=`echo "$1" | cut -s -f2 -d "@"`
+  if [ -x $domain ]
+   then
+    echo "No domain given\nUsage: $0 user@domain"
+    exit 2
+  fi
+
+  # add user to dovecot
+  echo "Adding user $user@$domain to dovecot and postfix with uid $uid and gid $gid"
+  echo "$user@$domain::$uid:$gid::$basedir/$domain/$user/:/sbin/nologin::" >> /secure/dovecot/users
+
+  # create the needed Maildir directories
+  echo "Creating user directory $basedir/$domain/$user"
+
+  # create domain directory
+  if [ ! -x $basedir/$domain ]; then
+    mkdir $basedir/$domain
+    chown $uid:$gid $basedir/$domain
+    chmod 700 $basedir/$domain
+  fi
+
+  mkdir -p $basedir/$domain/$user
+  mkdir -p $basedir/$domain/$user/.Drafts
+  mkdir -p $basedir/$domain/$user/.Sent
+  mkdir -p $basedir/$domain/$user/.Junk
+  mkdir -p $basedir/$domain/$user/.Trash
+  chown -R $uid:$gid $basedir/$domain/$user/
+
+  # add user to Postfix vmap, vuids and vgis; reload postfix
+  echo $1  $domain/$user/ >> /secure/postfix/vmaps
+  echo $1  $uid >> /secure/postfix/vuids
+  echo $1  $gid >> /secure/postfix/vgids
+  postmap /secure/postfix/vmaps
+  postmap /secure/postfix/vuids
+  postmap /secure/postfix/vgids
+
+  postfix reload
+
+  # add password to dovecot
+  echo "Adding imap password to dovecot"
+  passwd=`doveadm pw -u $user`
+  echo  "$user@$domain:$passwd" >> /secure/dovecot/passwd
+fi
+
+exit 0
