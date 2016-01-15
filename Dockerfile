@@ -1,8 +1,9 @@
 FROM centos:7
-MAINTAINER Robin Dietrich
+MAINTAINER Robin Dietrich <me@invokr.org>
 
 # Install postfix, dovecot, and supervisor
-RUN yum update -y && yum install -y cyrus-sasl dovecot postfix python-setuptools rsyslog \
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+ && yum update -y && yum install -y cyrus-sasl dovecot opendkim opendmarc postfix python-setuptools rsyslog wget  \
  && easy_install pip && pip install supervisor mako && yum clean all
 
 # for debugging
@@ -18,6 +19,7 @@ ADD scripts/dumb-init /sbin/dumb-init
 ADD scripts/postfix.sh /opt/postfix
 ADD scripts/config-apply.py /opt/config-apply
 ADD scripts/gentls.sh /opt/gentls
+ADD scripts/update-tld-names.sh /opt/update-tld-names
 
 # Add group and user for virtual mail
 RUN groupadd -g 10000 vmail && useradd -m -d /vmail -u 10000 -g 10000 -s /sbin/nologin vmail
@@ -30,6 +32,10 @@ RUN sed -i 's/^\$ModLoad imjournal/#\$ModLoad imjournal/' /etc/rsyslog.conf \
  && sed -i 's/^\$OmitLocalLogging on/\$OmitLocalLogging off/' /etc/rsyslog.conf \
  && sed -i 's/^\$IMJournalStateFile imjournal.state/#\$IMJournalStateFile imjournal.state/' /etc/rsyslog.conf \
  && sed -i 's/^\$SystemLogSocketName/#\$SystemLogSocketName/' /etc/rsyslog.d/listen.conf
+
+# Configure opendmarc
+ADD config/opendmarc/opendmarc.conf /etc/opendmarc.conf
+RUN /opt/update-tld-names
 
 # Configure postfix
 ADD config/postfix /etc/postfix/
