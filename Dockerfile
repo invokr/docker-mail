@@ -3,7 +3,7 @@ MAINTAINER Robin Dietrich <me@invokr.org>
 
 # Install postfix, dovecot, and supervisor
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
- && yum update -y && yum install -y cyrus-sasl dovecot opendkim opendmarc postfix python-setuptools rsyslog wget  \
+ && yum update -y && yum install -y cronie cyrus-sasl dovecot opendkim opendmarc postfix python-setuptools rsyslog wget  \
  && easy_install pip && pip install supervisor mako && yum clean all
 
 # for debugging
@@ -35,7 +35,7 @@ RUN sed -i 's/^\$ModLoad imjournal/#\$ModLoad imjournal/' /etc/rsyslog.conf \
 
 # Configure opendmarc
 ADD config/opendmarc/opendmarc.conf /etc/opendmarc.conf
-RUN /opt/update-tld-names
+RUN ln -s /opt/update-tld-names /etc/cron.weekly/ && /opt/update-tld-names
 
 # Configure postfix
 ADD config/postfix /etc/postfix/
