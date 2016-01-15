@@ -1,5 +1,6 @@
 #!/bin/bash
 /opt/bin/config-apply /opt/config/postfix/main.cf /etc/postfix/main.cf
+echo "127.0.0.1  $POSTFIX_HOSTNAME" >> /etc/hosts
 
 /opt/bin/gentls
 mkdir -p /secure/postfix
