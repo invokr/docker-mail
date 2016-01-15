@@ -1,0 +1,3 @@
+% for row in env['POSTFIX_VMAPS'].split(","):
+${row}
+% endfor
