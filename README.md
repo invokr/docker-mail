@@ -8,7 +8,7 @@ This container aims to provide a secure and portable mail environment based on P
 
 SSL is enabled per default and new TLS keys are generated when starting the container,
 these should be replaced with your own keys if possible.
-Dovecot is only listening on via SSL on port 993. Postfix is configured to use
+Dovecot is only listening via SSL on port 993. Postfix is configured to use
 opportunistic encryption as to not bounce mails from non-tls clients.
 In addition to common spam lists, opendmarc is used to authenticate messages when
 available. Mozillas public suffix list is updated once per week via cron.
@@ -18,6 +18,8 @@ Running the container
 
     docker pull invokr/mail
     docker run -name mail -d -p 25:25 -p 587:587 -p 993:993 -v secure:/secure -v vmail:/vmail -e POSTFIX_HOSTNAME=mail.domain.tld invokr/mail
+
+Make sure `POSTFIX_HOSTNAME` is a subdomain or else you won't be able to receive mail on that domain.
 
 Stopping the container
 ----------------------
