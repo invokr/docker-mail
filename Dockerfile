@@ -4,7 +4,7 @@ MAINTAINER Robin Dietrich <me@invokr.org>
 # Install postfix, dovecot, and supervisor
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
  && yum update -y && yum upgrade -y && yum install -y cronie cyrus-sasl dovecot opendkim \
-    opendmarc postfix python-setuptools rsyslog wget && easy_install pip \
+    opendmarc postfix python-setuptools pypolicyd-spf rsyslog wget && easy_install pip \
  && pip install supervisor mako && yum clean all
 
 # For debugging

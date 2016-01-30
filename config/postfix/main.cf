@@ -46,6 +46,9 @@ smtpd_milters           = inet:127.0.0.1:8893
 non_smtpd_milters       = $smtpd_milters
 milter_default_action   = accept
 
+# Configure spf check, give ppl 30 minutes to fix their DNS
+policy-spf_time_limit = 1800s
+
 # Set output folders
 home_mailbox = Maildir/
 
@@ -67,7 +70,8 @@ smtpd_recipient_restrictions =
     reject_rbl_client list.dsbl.org,
     reject_rbl_client sbl.spamhaus.org,
     reject_rbl_client cbl.abuseat.org,
-    reject_rbl_client dul.dnsbl.sorbs.net
+    reject_rbl_client dul.dnsbl.sorbs.net,
+    check_policy_service unix:private/policy-spf
 smtpd_data_restrictions = reject_unauth_pipelining
 
 # Directories used by Postfix
