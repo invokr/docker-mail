@@ -92,9 +92,6 @@ inet_protocols = all
 # This allows a single mail per process per second
 in_flow_delay = 1s
 
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
-
 # Max mailsize 20MB
 message_size_limit = 20971520
 
