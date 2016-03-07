@@ -34,6 +34,16 @@ smtp_tls_security_level=may
 smtp_tls_mandatory_ciphers=high
 smtp_tls_mandatory_protocols = !SSLv2, !SSLv3
 
+# Disable cyphers
+lmtp_tls_protocols = !SSLv2, !SSLv3
+tlsproxy_tls_protocols = $smtpd_tls_protocols
+
+lmtp_tls_mandatory_protocols = !SSLv2, !SSLv3
+tlsproxy_tls_mandatory_protocols = $smtpd_tls_mandatory_protocols
+
+smtp_tls_exclude_ciphers = EXPORT, LOW, MD5, aDSS, kECDHe, kECDHr, kDHd, kDHr, SEED, IDEA, RC2
+smtpd_tls_exclude_ciphers = EXPORT, LOW, MD5, SEED, IDEA, RC2
+
 # Configure SASL auth with dovecot
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
