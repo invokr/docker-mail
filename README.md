@@ -58,3 +58,8 @@ Backups
 All the data is saved in `/secure` (User configuration and SSL certificates) and
 `/vmail` (Mailboxes). Backing up these directories is enough to transfer your mail
 server to a new host or recover your data in the case of a hard drive failure.
+
+License
+-------
+
+Public Domain or MIT, whatever is available in your country
