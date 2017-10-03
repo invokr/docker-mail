@@ -1,7 +1,6 @@
 Docker Mailserver
 =================
 
-![](https://badge.imagelayers.io/invokr/mail:latest.svg)
 ![](https://img.shields.io/docker/pulls/invokr/mail.svg)
 
 This container aims to provide a secure and portable mail environment based on Postfix and Dovecot.
@@ -13,21 +12,26 @@ opportunistic encryption as to not bounce mails from non-tls clients.
 In addition to common spam lists, opendmarc is used to authenticate messages when
 available. Mozillas public suffix list is updated once per week via cron.
 
+This is not a prime example of how you should build a docker container, but I'm to lazy to pull all the configurations
+apart so that each service is running in it's own container.
+
+CentOS is used as the base image instead of alpine so I can be sure postfix / dovecot stay on their respective versions.
+
 Running the container
 ----------------------
 
     docker pull invokr/mail
-    docker run -name mail -d -p 25:25 -p 587:587 -p 993:993 -v secure:/secure -v vmail:/vmail -e POSTFIX_HOSTNAME=mail.domain.tld invokr/mail
+    docker run -d -p 25:25 -p 587:587 -p 993:993 -v secure:/secure -v vmail:/vmail -e POSTFIX_HOSTNAME=mail.domain.tld invokr/mail
 
 Make sure `POSTFIX_HOSTNAME` is a subdomain or else you won't be able to receive mail on that domain.
 
 Stopping the container
 ----------------------
 
-The container can be safely stopped with `docker stop mail`.
+The container can be safely stopped with `docker stop <id>`.
 
-We are using [dumb-init](https://github.com/Yelp/dumb-init) to start `supervisord`
-so that all of the daemons shut down gracefully.
+[dumb-init](https://github.com/Yelp/dumb-init) is used to start `supervisord`
+so that all of the daemons shut down gracefully without corrupting your files.
 
 Configuration
 -------------
